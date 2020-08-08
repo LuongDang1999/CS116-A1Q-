@@ -1,0 +1,654 @@
+<== Chapter 1 : File Basics and Storing Data and Characters ==>
+
+File Input and Output
+In this module, we will discuss file input and output. Currently, our functions can get data from several sources:
+
+function parameter values,
+global constants declared outside our function
+data entered by the user at the keyboard.
+Our functions are also capable of displaying data in several different ways:
+
+by returning calculated values,
+mutatating parameters, or
+printing information on the screen.
+As we have seen, each of the above ways of consuming and returning data has their own benefits. However, neither of the options above are really well suited for 
+large data consumption or production. In this module, we will discuss general file types and how Python can open, read, and write to files.
+
+What is a File?
+Computers store data in files. Typically, what exists in a (data) file is a bunch of 0s and 1s, which are interpreted as the data that we wish to see (more on this 
+later). These files are persistent meaning that when you complete the execution of your program, these files continue to live on (likely on a physical disc). These files can then be used by other programs as well. In the following module, we will see how our programs can:
+
+read input from files instead of from the keyboard, and
+write results to files instead of to the screen.
+Computer scientists tend to use the word "file" in many different contexts:
+
+A data file in the current directory containing data (text or numbers) for our program
+A variable in our program corresponding to that data file
+In reality, some physical device is used to store the characters or numbers in our data file in some format. There are a number of considerations when thinking 
+about how a computer should store a file. These include:
+
+Stored digitally
+Must be consistent across platforms
+Must be concise and easily manipulated
+Data must have standard forms
+With respect to the last point above, values like integers, floating point numbers and even characters need to be stored in a consistent and standard way in order 
+for computers across the world to communicate using the same language. In future courses, you will discuss how computers can store integers and floating point 
+numbers using a binary decimal system. In this course, we will discuss how characters are stored.
+
+Concept Check 10.1.1
+1/1 point (graded)
+Which of the following is not true when considering files?
+
+A.Files are persistent.
+B.Files contain data for our program.
+C.Data should be stored in the same way across platforms.
+D.Python cannot be used to read files
+
+Answer: D
+
+How are Characters Stored?
+In the early days of computing, computer scientists understood that in order to be able to communicate effectively with each other, a standard was needed in order to be able to read and write characters. In the early 1960s, the American Standard Code for Information Interexchange, better known as the ASCII standard, was established as a way of associating a numeric value to each character in the Latin alphabet (including symbols and numbers). These characters are given a value from 0 to 127 (or up to 255 in extended ASCII).
+
+Each character can be stored using 8 binary digits (called a byte). This is where the number 255 comes from, namely . Standard ASCII saved one binary digit to be used, for example, as a checksum. We include an ASCII table below for reference. Do not memorize the table! We will discuss built-in functions that Python provides us to allow us to get the ASCII value easily. However, do note the following:
+
+Characters from 0 to 31 are control characters
+A, B, C, …, Z are in consecutive locations
+a, b, c, …, z are in consecutive locations
+0, 1, 2, …, 9 are in consecutive locations
+Strings are stored in memory using the ASCII code for each character, in order
+
+ASCII in Python
+Python comes equipped with two very important functions to help with going to and from an ASCII table. They are ord(c) and chr(code).
+
+In fact, more generally, these functions actually go to and from Unicode, a generalization of ASCII. This is needed since there are many other character sets that are not represented by the above table (for example, Egyptian hieroglyphs are not expressable in ASCII). An extremely popular Unicode encoding standard is UTF-8 and these require 4 bytes per character.
+Here is an explanation of what the two aforementioned functions do:
+
+ord: Str -> Nat returns the Unicode code for the consumed string. Requires that the consumed string is of length 1. Note that this Unicode code corresponds to the ASCII code if a character that is in the ASCII table is the input. For example:
+  ord('a') => 97
+  ord('\n') => 10
+  
+chr: Nat -> Str returns the character corresponding to the Unicode number. Requires that the consumed natural number is between 0 and 1114111 (which correspond to valid entries in a Unicode table). Note that this Unicode code corresponds to the ASCII code when the input is between 0 and 127. For example:
+  chr(97) => 'a'
+  chr(32) => ' '
+  
+*Concept Check 10.1.2
+1/1 point (graded)
+What is the value of chr(ord('a') + 3)?
+Answer: 'd'
+
+*Concept Check 10.1.3
+1/1 point (graded)
+What is the value of ord('r') - ord('m')?
+Answer: 5
+
+*Concept Check 10.1.4
+1/1 point (graded)
+What is the value of int(chr(ord('5'))) - ord(chr(3))?
+Answer:2
+
+Concept Check 10.1.5
+1/1 point (graded)
+How many binary digits are in one byte?
+A. 4
+B. 8 
+C. 16
+D. 32
+
+Answer: B.
+
+Creating Text Files for Reading
+In this course, we are working with text files only (though there are other very popular file types that you might see such as Comma Separated Values (CSV) and so 
+on). Text files are very versatile and understanding how to process these files can help us manage large data sets.
+
+To create a text file, you can use almost any text editor (some exceptions below). For example, you can create text files using Wing 101! In your editor, start a 
+new file then select Save as then pick your destination and label your file name something like file_name.txt. It is good form to end text files with .txt.
+
+Warning:> Some text editors are not conducive to making text files nicely. For example, Notepad for Windows will add an extra carriage return character at the end 
+of lines (this was to mimic real world typewriters) and Microsoft Word typically wants to save text files with endings like .doc, .docx, .pdf, .rtf which would 
+cause strange behaviour if read as a text file. For simplicity, we recommend using Wing 101 when creating and saving files.
+
+Concept Check 10.1.6
+1/1 point (graded)
+Which of the following text editors would be suitable to use for this course?
+A.Wing 101
+B.GNU Emacs
+C.Nano
+D.TextEdit
+E.Any of the above though we prefer to simply use Wing 101 in this course
+
+Answer: E.
+
+Final Thoughts
+In this lesson, we introduced files. We discussed how characters are interpreted and stored by computers (specifically with respect to ASCII and Unicode encodings) 
+and discussed how to make your own text files.
+
+In the next lesson, we teach you how to read and write files using Python. We finish off this module with a brief discussion on the impacts of files with respect 
+to our design recipe.
+  
+<== Chapter 2: File Basics in Python ==>
+File Basics in Python
+In this lesson, we will discuss the basics of file input and output as performed in Python. We will read files into a Python program to be processed and will d
+iscuss creating new files for your Python program to save data to. In order to use files in Python, we will follow the following template
+
+Find the file
+Open the file (using open)
+Access the file
+Close the file (using close)
+Step 1: Finding a File
+When working with files locally on your computer, it is important that Python knows where the file is. By default, Python will look in the current directory 
+where your Python program is saved to try to find the file there first. You can change this behaviour by importing the os module and looking up some of the 
+methods in there; however, for this course, we will assume you will always have your file saved in the same directory/folder as your program.
+
+Step 2: Opening a File
+Python has a built-in function designed to handle opening files. It is given by:
+
+open(filename, mode)
+where in this course, mode is either 'r' for reading a file or 'w' for writing a file. There is also the command open(filename) which is meant for reading a file 
+and behaves exactly the same way as open(filename, 'r') behaves.
+
+open(filename, "r") or open(filename) opens the file named filename for reading
+open(filename, "w") creates the file named filename for writing.
+Warning! If there is already a file named filename, its contents are erased before the new data is written. Be careful!
+
+Concept Check 10.2.1
+
+Which of the following are true about files? Choose the best answer.
+A.When a file is opened for writing, the contents of that file are immediately destroyed and cannot be recovered.
+B.The lines of Python code fin = open(filename) and fin = open(filename, 'r') do the same thing.
+C.When saving text files to be opened by Python, they should be saved in the same directory as the program you are working on.
+D.All of the above are correct. 
+E.Exactly two of the above are correct.
+
+Answer: D
+
+
+Step 3: Accessing Files: Reading and Writing
+In this course, there are a few ways that we will access files. We can either read from a file or write to a file. There are other possible options for a file but 
+these will be the two methods used in this course. It is important to note the following:
+
+If a file is opened for reading, say fin = open(filename) or fin = open(filename, 'r'), then you cannot write to fin. In other words, you cannot write to a file 
+being read from.
+If a file is opened for writing, say fout = open(filename, 'w'), then you cannot read from fout. In other words, you cannot read from a file being written to.
+Reading Files
+There are two methods to be used after a file has been opened for reading to extract data from a file. These are readline() and readlines(). Suppose we call 
+fin = open("myfile.txt", 'r'). Then:
+
+fin.readline()
+Returns the next line from file fin
+Includes newline character
+Returns the empty string when at end of file
+fin.readlines()
+Returns a list of strings containing each line from file fin
+Each string terminates with newline character (if present in file)
+If the file is very large, this may consume a lot of memory
+Writing to Files
+As with reading, there are two methods to be used after a file has been opened for writing to save data to a text file. These are write(s) and writelines(los). 
+Suppose we call fout = open("myfile.txt", 'w'). Then:
+
+fout.write(s)
+Appends the string s to the end of file fout
+Writes the newline character if and only if s includes it
+fout.writelines(los)
+Appends all the strings in los to the end of file fout
+Writes newline characters only for those strings in los which include it
+Recall: If you open an existing file for writing, you lose the previous contents of that file.
+
+Concept Check 10.2.2
+1/1 point (graded)
+Which of the following are true about files? Choose the best answer.
+It is recommended that you use readlines() instead of readline() since you load everything at once immediately.
+The method readline() includes the newline character when reading. correct
+The method write(s) appends a newline character to s when writing.
+All of the above are correct.
+Exactly two of the above are correct.
+SubmitYou have used 1 of 2 attemptsSome problems have options such as save, reset, hints, or show answer. These options follow the Submit button.
+
+Show Answer
+Step 4: Closing Files
+Once you are finished using a file you should call the close() method. This will close the file and you will no longer be able to access the data after closing it. It is good style to always close a file after opening it. It is required when you have a file opened for writing data! Failing to close a file that you are writing to might result in a loss of data!
+
+Note: For those of you that have seen the command with, note that in this course we will not be using it as we are keeping with our theme of using language features that are more ubiquitous across platforms.
+
+Concept Check 10.2.3
+
+Which of the following are true about files? Choose the best answer.
+A. It is not required to call open before reading from a file, but it is good style.
+B. It is not required to call close after reading from a file, but it is good style.
+C. If a file exists before you open it for writing, and you close it without using write or writelines, the original contents will be saved.
+D. All of the above are correct.
+E. Exactly two of the above are correct.
+
+Answer: B
+
+*** Example: Reading and processing a file of names ***
+Suppose you have a file names-small.txt containing a collection of names, where each line contains a single name in the form
+
+  first_name (spaces) last_name
+  
+where first_name and last_name are non empty strings. We will write Python code to create a list of Name objects using the class from the Warm-Up Problems from the open file object called fin.
+
+Let's begin be recalling the Warm-Up exercise which you coded.
+
+Code:
+import check
+
+
+class Name:
+  '''
+  Fields: 
+     first (Str), 
+     last (Str)
+  '''
+  def __init__(self, fn, ln):
+    '''
+    Initializes a Name object.
+    
+    __init__: Name Str Str -> None
+    '''
+    self.first = fn
+    self.last = ln
+  
+  def __eq__(self, other):
+    '''
+    __eq__: Name Any -> Bool
+    '''
+    return isinstance(other, Name) and \
+          self.first == other.first and \
+          self.last == other.last
+    
+def str_name(s):
+  '''
+  Returns Name from s, where s has the form 
+  first last" or "first last\n"
+  but s may include extra whitespaces above
+    
+  str_name: Str -> Name
+  
+  Example:
+     str_name("Carmen    Bruni  \n") \
+           => Name("Carmen", "Bruni")
+  '''
+  nameslist = s.split()
+  return Name(nameslist[0], nameslist[1])
+  
+check.expect("Test", 
+    str_name("Carmen    Bruni  \n"), 
+       Name("Carmen", "Bruni"))
+ 
+ 
+First Solution:
+In the following solution, we read names one at a time directly from the file and process the values one by one.
+
+Code:
+class Name:
+  def __init__(self, fn, ln):
+    self.first = fn
+    self.last = ln
+
+def str_name(s):
+  nameslist = s.split()
+  return Name(nameslist[0], nameslist[1])
+    
+fin = open('names-small.txt', 'r')
+next_str = fin.readline()
+people = [] #List of Name objects
+while (next_str != ""):
+  next_name = str_name(next_str)
+  people.append(next_name)
+  next_str = fin.readline()
+fin.close()
+
+Second Solution:
+In the following solution, we read all the names at once from the file and then process them using an abstract list function. 
+This approach is not recommended if you have a very large file
+
+Code:
+class Name:
+  def __init__(self, fn, ln):
+    self.first = fn
+    self.last = ln
+
+def str_name(s):
+  nameslist = s.split()
+  return Name(nameslist[0], nameslist[1])
+    
+fin = open('names-small.txt', 'r')
+all_names = fin.readlines()
+people = list(map(str_name, all_names))
+fin.close()
+
+Concept Check 10.2.4
+Write a function longest_name(filename) that consumes a text file name in the same format as 'names-small.txt' above and returns the name of person with the 
+longest name (or the first person with the longest name in the case of a tie). Be mindful of white spaces!
+
+def longest_name(filename):
+  '''
+  Consumes a string filename that is a file
+  present in the current directory with names first last
+  in white space separated format (one name per line)
+  and returns the person with the longest name 
+  (or the first person in the case of a tie)
+  
+  Effects: 
+     Reads from file in filename
+  
+  longest_name: Str -> Str
+  Requires: filename is a valid filename in the directory.
+  
+  Example:
+     longest_name("names-small.txt") => 'John Smith'
+     Assuming names-small.txt contains
+     John Smith
+     Jane Doe
+     Mike Lower
+  '''
+file = open(filename,'r')
+  longest = 0
+  all_names = file.readline()
+  while all_names != "":
+    if len(all_names) > longest :
+      longest = len(all_names)
+      name = all_names
+      all_names = file.readline()
+    else:
+      all_names = file.readline()
+  return name[:-1]
+  
+
+print(longest_name("names-small.txt"))
+
+Concept Check 10.2.5
+Suppose a file data.txt contains the following information:
+CS 116
+is awesomely
+Awesome.
+
+Consider the following code:
+Code:
+fin = open("data.txt")
+d = fin.readline()
+while d != "":
+   parts = d.split()
+   print(parts[0], end="")
+fin.close()
+
+What is printed to the screen?
+A.CS (exactly once)
+B.CS is Awesome.
+C.CSisAwesome. incorrect
+D.CS is Awesome.
+E.There is a problem
+
+Be careful! note that d is not updated in the loop! Thus we will loop forever (with d equalling CS 116) and hence there is a problem.
+
+Answer: E
+
+Concept Check 10.2.6
+1/1 point (graded)
+Suppose a file data.txt contains the following information:
+CS 116
+is awesomely
+Awesome.
+
+Consider the following code:
+Code:
+fin = open("data.txt")
+d = fin.readline()
+while d != "":
+   parts = d.split()
+   print(parts[0], end="")
+   d = fin.readline()
+fin.close()
+
+What is printed to the screen?
+A. CS (exactly once)
+B. CS is Awesome.
+C. CSisAwesome. 
+D. CS is Awesome.
+E. There is a problem.
+
+Answer: C
+
+*** Worked Example: Writing to a File ***
+Now, given a file 'names-small.txt' with the same format as above, we will read the names from the file and write them out in the form
+
+                                                            last_name, first_name
+  
+and save these to the file 'reversed.txt'.
+
+Code:
+class Name:
+  def __init__(self, fn, ln):
+    self.first = fn
+    self.last = ln
+
+def str_name(s):
+  nameslist = s.split()
+  return Name(nameslist[0], nameslist[1])
+    
+fin = open('names-small.txt', 'r')
+all_names = fin.readlines()
+people = list(map(str_name, all_names))
+fin.close() 
+
+#Write to file
+fout = open("reversed.txt","w")
+for p in people: 
+   s = "{0.last}, {0.first}\n"     
+   fout.write(s.format(p))
+fout.close() #Extremely Important!
+
+Concept Check 10.2.7
+Write the body of a function name_lengths(filename_in, filename_out) that consumes two text file names and returns None.
+The first, filename_in has the same format as 'names-small.txt' above and the function will open and write the length 
+of each name on a separate line to a file with name filename_out.
+
+When computing lengths, you should ignore whitespaces. However, don't forget newline characters in your output file!
+
+def name_lengths(filename_in, filename_out):
+  '''
+  Consumes a string filename_in that is a file
+  present in the current directory with names first last
+  in white space separated format (one name per line)
+  and write the lengths of each person's name to 
+  a file with the name filename_out.
+  
+  Effects:
+     Reads from file in filename_in
+     Writes to file in filename_out
+  
+  longest_name: Str Str -> None
+  Requires: filename_in is a valid filename in the directory.
+  
+  Example:
+     longest_name("names-small.txt", "out.txt") => None
+     Assuming names-small.txt contains
+     John Smith
+     Jane Doe
+     Mike Lower
+     then out.txt contains:
+     9
+     7
+     9
+     
+  '''
+  fin = open(filename_in, 'r')
+  fout = open(filename_out,"w")
+  names = fin.readlines() 
+  fin.close()
+  #Write to file
+  for i in names:
+    fout.write(str(len(i) - 2) + "\r\n")
+  fout.close() #Extremely Important!
+
+ *** Templates for Reading and Writing Files ***
+We present two templates to help you get used to the syntax of reading and writing to files. These are primarily meant for your reference.
+
+Template for Reading Files:
+fin = open(filename, "r")
+## read file using fin.readline() in a loop, 
+## or using fin.readlines()
+## Note: resulting strings contain newlines
+fin.close()
+
+Template for Writing Files:
+fout = open(filename, "w")
+## write to file usingfout.write(s) 
+## in a loop, or fout.writelines(los)
+## Note: newlines are written only 
+##       if strings include them
+fout.close()
+
+Concept Check 10.2.8
+1/1 point (graded)
+Consider the following code, assuming that my_file.txt exists in the same directory that we are working in and is non-empty.
+Code:
+fin = open("my_file.txt")
+fin.readline()
+fin.readlines()
+fin.close()
+fin.readline()
+
+Which of the following statements best explains the error in the above code?
+A. The programmer did not open "my_file.txt" for reading.
+B. The programmer is using a method that does not exist.
+C. The programmer is trying to read a line from a file after it is closed. correct
+D. The programmer is using both readline() and readlines() which is not allowed.
+Answer: C.
+
+<== Chapter 3: Files: Design Recipe Changes ==>
+The Design Recipe and Files: Modifications
+In the last lesson, we already saw some of the changes that need to occur with our design recipe:
+
+Purpose: Should include details about what is read from a file or written to a file
+Effects: Should mention reading from a file or writing to a file (don't need details here)
+Contract: Should mention that file names exist if being read from.
+Examples: Should be explicit about what is in the input file and what is in the output file
+The last major change that will need to take place is the update to our testing routine. As always, we will continue to use our check module.
+
+Testing File Input
+For testing file input, be cognizant and explicit about what the file contains. File input is usually given to a function in the form of a string so nothing else 
+is required here. As an example, consider the following code.
+
+Code:
+def process_file(filename):
+  '''
+  Reads a file of single numbers one per line 
+  and returns a list of numbers.
+
+  Effects:
+     Reads a file called filename
+  
+  process_file: Str -> (listof Int)
+  Requires:
+     filename is a valid file in the current directory.
+  
+  Examples:
+      process_file("empty.txt") => []
+      assuming empty.txt is an empty file.
+  
+	  process_file("q1t1file.txt") => [2, 4, 6]
+      assuming q1t1file.txt is a file with 
+      2 4 6 on separate lines.  
+  '''
+  fin = open(filename, "r")
+  ans = []
+  for line in fin.readlines():
+    ans.append(int(line.strip()))
+  fin.close()
+  return ans
+  
+##Test description can occur in a comment before OR in the string.
+check.expect('Test basic: q1t1file.txt has 2 4 6 on separate lines.',
+  process_file("q1t1file.txt"), [2,4,6])
+
+Testing File Output
+To test for file output, you will need to use your text editor to create a file with the projected answer separately in a file with a different file name than what your program is going to create. The class method inside the check module that will set up the backend to make this comparison is check.set_file_exact(actual, expected) where:
+
+actual is the name of file created by program
+expected is the name of file you created in your text editor with the expected output
+The call to check.set_file_exact must occur before your call to check.expect (or check.within) as was the case with say check.set_print_exact because it needs to initialize the parameters before the expect call executes. After the calls to check.set_file_exact and check.expect have been made, the testing module will check that the output file from your function matches the expected file and also make sure the return value from your function matches what check.expect claims it should have been. You will receive error messages if either is incorrect.
+
+Concept Check 10.3.1
+
+Which of the following are true about files? Choose the best answer.
+A.check.set_file_exact must be called before check.expect (or check.within).
+B.When testing files exactly, you need to create the expected output in some text editor.
+C.The output of the function does not need to be tested if your function produces an output file.
+D.All of the above are correct.
+E.Exactly two of the above are correct. 
+
+Answer: E.
+
+Worked Example: Testing File Output
+Let's try to use our check module with file output. Below is a complete worked example. (You will have to set up the text files yourself if working at home!) 
+Notice below that this function returns None but still accomplishes something important!
+
+Code:
+import check
+def file_filter(fname, minimum):
+  '''
+  Opens the file called fname,that contains
+  one integer on each line, reads in each 
+  integer, and writes each integer>minimum 
+  to a new file, "summary.txt". 
+    
+  Effects: 
+     Reads file called fname
+     Writes to a file called "summary.txt" 
+    
+  file_filter: Str Int -> None
+  Requires: 
+     0 <= minimum <= 100
+     fname file exists
+  
+  Examples:
+     If "empty.txt" is empty, then 
+     file_filter("empty.txt", 1) will create an 
+     empty file named summary.txt
+     
+     If "eg2.txt" contains 35, 75, 50, 90 (one per 
+     line) then file_filter("eg2.txt", 50) will 
+     create a file named "summary.txt" 
+     containing 75, 90 (one per line)
+  '''
+
+  fin = open(fname, "r")
+  lst = fin.readlines()
+  fin.close()
+  fout = open("summary.txt", "w")
+  for line in lst:
+      if int(line.strip()) > minimum:
+          fout.write(line)
+  fout.close()
+
+# Test 1: empty file
+# q3t1_input.txt contains nothing
+# q3t1_expected.txt contains nothing
+check.set_file_exact("summary.txt", "q3t1_expected.txt")
+check.expect("Q3T1: Empty file", file_filter("q3t1_input.txt", 40), None)
+
+# Test 2: general case
+# q3t2_input.txt contains first thirty positive integers, one line each
+# q3t2_expected.txt contains the numebrs form 16 to 30 one line each
+check.set_file_exact("summary.txt", "q3t2_expected.txt")
+check.expect("Q3T2: First 30 ints", file_filter("q3t2_input.txt", 15), None)
+
+Concept Check 10.3.2
+
+What is contained in "summary.txt" if the above function is run with passed parameter filename being the string of a text file containing the numbers from 1 to 10 on separate lines and minimum is 9?
+A. An empty file
+B. The numbers from 1 to 10 on a single line each.
+C. The numbers 9 and 10 on a single line each
+D. The number 10 on a single line correct
+
+Answer: D.
+
+
+
+
+
+
+       
+  
+
