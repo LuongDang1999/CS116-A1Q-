@@ -1,0 +1,40 @@
+"A1Q2:To Infinity and Beyond!"
+
+Converting a useful formula to Python
+
+When dealing with most vehicles, you may want to work how far you can go on a tank of gas. However, when dealing with rocketry, it’s much more meaningful to work 
+out how much the rocket is able to change its velocity (abbreviated , pronounced "delta vee").
+
+You can work this out from three numbers:
+
+ m0,the rocket’s initial mass (including fuel)
+ mf,the rocket’s final mass (after burning all fuel)
+ Isp,the rocket motor’s "specific impulse" (a measurement of efficiency)
+
+Given this values, you can compute using the following equation:
+                                                        delta_v = Isp * g0 * ln(m0/mf)
+
+where g0 = 9.80665 m/s^2
+
+Write a Python function
+
+delta_v(m0, mf, isp)
+which consumes three positive integers m0, mf, and isp representing the values above and returns the value for .
+
+Example:
+
+delta_v(50, 20, 320) => 2875.4376018347784
+You can use the online calculator here to check your results: http://www.strout.net/info/science/delta-v/ (Make sure to set it to "specific impulse" not 
+"exhaust velocity").
+
+Note that this is a floating point value, so you must use check.within for your testing.
+
+Update: Since the online calculator only has 2 digits after the decimal, your check.within tests may use 0.01 as the tolerance. (Of course, you could also 
+just use the calculator app on your phone / computer, to get more digits).
+
+You will find the function math.log useful.
+
+Code:
+def delta_v(m0, mf, isp):
+  ##YOUR CODE GOES HERE
+  pass
