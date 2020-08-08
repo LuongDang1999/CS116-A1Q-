@@ -1,0 +1,16 @@
+“A1Q1: Pizza!”:
+
+how_many_pizzas(slices_veg, slices_meat, slices_deluxe)
+that consumes three positive integers natural numbers: slices_veg, slices_meat, and slices_deluxe, and returns a natural number corresponding to the minimum 
+number of pizzas to order, under the assumption that each pizza contains exactly 8 slices, all of which must be the same type (no half-and-half pizzas are allowed).
+
+Example:
+how_many_pizzas(3, 16, 8) => 4
+
+Explanation: We require at least 1 vegetarian, 2 meat, and 1 deluxe pizza.
+You will find the function math.ceil useful.
+
+Code:
+def how_many_pizzas(slices_veg, slices_meat, slices_deluxe):
+  ##YOUR CODE GOES HERE
+  Pass
