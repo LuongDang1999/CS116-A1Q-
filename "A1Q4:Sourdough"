@@ -1,0 +1,26 @@
+You have recently been baking a lot of sourdough bread, but are running short on supplies.
+
+Write the Python function
+
+num_loaves(bread_flour, rye_flour, water, salt)
+that consumes 4 natural numbers: the number of grams of bread flour you have, the number of grams of rye flour you have, the number of milliliters of spring water you have, and the number of grams of salt you have. The function returns the number of loaves you can bake (as a natural number).
+
+Recipe:
+
+A loaf is 500g of flour (at most 100g, i.e.20% , of which is rye flour),400mL of water, and 10g  of salt.
+
+Examples:
+
+num_loaves(5000, 500, 6000, 1000) => 11 
+Explanation: Note that 5500g  of flour is enough for 11 loaves, 6000mL water is enough for 15 loaves, and 1000g of salt is enough for 100 loaves. 
+Flour is the limiting factor, so that is the answer.
+
+num_loaves(5000, 5000, 6000, 1000) => 12
+Explanation:Now there is 6250g of usable flour mix (any more than 1250g of rye would bring the proportion above the 20% maximum), flour will now limit you to 12 loaves.
+
+Hint: You will find the built-in min function very useful.
+
+Code:
+def num_loaves(bread_flour, rye_flour, water, salt):
+  ##YOUR CODE GOES HERE
+  pass
